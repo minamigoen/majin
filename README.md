@@ -3,6 +3,9 @@
 このプロジェクトは、**まじん式プロンプト v3** をベースに改良した **Google スプレッドシート連携対応版**です。  
 スプレッドシートにプリセットを保存できるため、**ブラウザを閉じても設定が消えず、チームでも共有して使える**のが特長です。
 
+note · 【究極】まじん式プロンプトv3
+https://note.com/majin_108/n/n11fc2f2190e9&ved=2ahUKEwiB5_O8jaqQAxV23TQHHQ8iKlsQFnoECCUQAQ&usg=AOvVaw2NLG6M3PGTLIRcfaCLnKki
+
 ---
 
 ## 🎯 概要
