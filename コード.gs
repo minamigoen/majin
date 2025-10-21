@@ -2,14 +2,42 @@
 // スプレッドシート連携用GASコード (Web App UI版)
 // =================================================================
 
-// ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-// ★ デプロイ管理画面からコピーした、動作するWebアプリのURLを下記に貼り付け ★
-// ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-const WEBAPP_URL = 'ここにWebアプリのURLを貼り付けてください';
-// 例: const WEBAPP_URL = 'https://script.google.com/a/macros/domain.com/s/AKfycb.../exec';
-
 
 const PRESET_SHEET_NAME = 'まじん'; // プリセットを保存するシート名
+// プリセットを保存するシート名
+const SETTINGS_SHEET_NAME = '設定'; // 設定シート名
+
+/**
+ * 「設定」シートからキーバリューペアで設定を読み込む
+ * @returns {Object} 設定のキーと値のオブジェクト (例: {'アプリURL': 'http://...', 'Gemまじんv3': 'http://...'})
+ */
+function getAppSettingsFromSheet() {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName(SETTINGS_SHEET_NAME);
+    if (!sheet) {
+      Logger.log(`エラー: シート「${SETTINGS_SHEET_NAME}」が見つかりません。`);
+      return {};
+    }
+    
+    // A列（項目名）とB列（値）のデータを取得
+    const data = sheet.getRange(1, 1, sheet.getLastRow(), 2).getValues(); 
+    const settings = {};
+    
+    for (let i = 0; i < data.length; i++) {
+      const key = data[i][0]; // A列 (項目)
+      const value = data[i][1]; // B列 (値)
+      if (key && typeof key === 'string' && key.trim() !== '' && 
+          value && typeof value === 'string' && value.trim() !== '') {
+        settings[key.trim()] = value.trim();
+      }
+    }
+    return settings;
+  } catch (e) {
+    Logger.log(`設定シート読み込みエラー: ${e.message}`);
+    return {};
+  }
+}
 
 /**
  * スプレッドシートを開いた時にカスタムメニューを追加します。
@@ -25,9 +53,13 @@ function onOpen() {
  * Webアプリケーションを新しいタブで開くためのダイアログを表示します。
  */
 function openWebApp() {
-  if (!WEBAPP_URL || WEBAPP_URL === 'ここにWebアプリのURLを貼り付けてください') {
-    SpreadsheetApp.getUi().alert('エラー', 'コード.gsの先頭にある WEBAPP_URL に、デプロイしたWebアプリのURLを設定してください。', SpreadsheetApp.getUi().ButtonSet.OK);
-    return;
+  // 「設定」シートから動的にURLを取得
+  const appSettings = getAppSettingsFromSheet();
+  const WEBAPP_URL = appSettings['アプリURL']; // キー名は「設定」シートのA列に合わせます
+
+  if (!WEBAPP_URL || WEBAPP_URL.trim() === '') {
+    SpreadsheetApp.getUi().alert('エラー', `「${SETTINGS_SHEET_NAME}」シートの「アプリURL」項目（A列）に対応するURL（B列）を設定してください。`, SpreadsheetApp.getUi().ButtonSet.OK);
+return;
   }
 
   const html = HtmlService.createHtmlOutput(
@@ -36,7 +68,7 @@ function openWebApp() {
   )
   .setWidth(400)
   .setHeight(120);
-  SpreadsheetApp.getUi().showModalDialog(html, 'ツールを開く');
+SpreadsheetApp.getUi().showModalDialog(html, 'ツールを開く');
 }
 
 /**
@@ -44,9 +76,14 @@ function openWebApp() {
  */
 function doGet(e) {
   const htmlTemplate = HtmlService.createTemplateFromFile('index.html');
-  htmlTemplate.settings = loadSettings();
-  return htmlTemplate.evaluate()
-      .setTitle('美波御塩 スライド作成ツール')
+  htmlTemplate.settings = loadSettings(); // 既存のプリセット設定を読み込む
+  // 「設定」シートからアプリ設定（Gemini URLなど）を読み込む
+  const appSettings = getAppSettingsFromSheet();
+  // キー名は「設定」シートのA列に合わせます (画像では 'Gemまじんv3')
+  htmlTemplate.geminiUrl = appSettings['Gemまじんv3'] || ''; // テンプレートに渡す
+
+return htmlTemplate.evaluate()
+      .setTitle('スライド作成ツール') // こちらのdoGetを有効とします
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
 }
 
@@ -1048,12 +1085,6 @@ const CONFIG = {
 // ========================================
 // 2. Webアプリケーションのメイン関数
 // ========================================
-
-function doGet(e) {
-  const htmlTemplate = HtmlService.createTemplateFromFile('index.html');
-  htmlTemplate.settings = loadSettings();
-  return htmlTemplate.evaluate().setTitle('Google Slide Generator').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
-}
 
 function saveSettings(settings) {
   try {
