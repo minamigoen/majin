@@ -7,10 +7,10 @@
   <style>
     /* カスタムテーマ */
     :root {
-      --primary-color: #0894ab;/*変更してUIの色味を調整*/
-      --gradient-start: #0894ab;/*変更してUIの色味を調整*/
-      --gradient-end: #00d4ff;/*変更してUIの色味を調整*/
-      --focus-shadow: rgba(0, 74, 140, 0.2);
+      --primary-color: #0894ab;/*#004a8c*/
+      --gradient-start: #0894ab;/*#004a8c*/
+      --gradient-end: #00d4ff;/*#3399cc*/
+      --focus-shadow: rgba(8, 148, 171, 0.2); /* プライマリカラーに合わせて変更 */
     }
 
     body { 
@@ -200,27 +200,27 @@
       grid-column: 1 / -1;
     }
     .collapsible-header {
-      background: #e8f0fe;
+      background: #e0f7fa; /* プライマリカラーに合わせて変更 */
       color: var(--primary-color);
       padding: 12px 20px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
       font-size: 16px;
-      border: 1px solid #d2e3fc;
+      border: 1px solid #b2ebf2; /* プライマリカラーに合わせて変更 */
       transition: all 0.2s ease;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .collapsible-header:hover {
-      background: #dce7fd;
+      background: #cceef4; /* プライマリカラーに合わせて変更 */
     }
     .collapsible-content {
       display: none;
       padding: 20px;
       background: #f8f9fa;
-      border: 1px solid #d2e3fc;
+      border: 1px solid #b2ebf2; /* プライマリカラーに合わせて変更 */
       border-top: none;
       border-radius: 0 0 8px 8px;
     }
@@ -320,8 +320,43 @@
     .creator-info small { color: #6c757d; font-size: 12px; font-weight: 500; }
     .note-info { margin-bottom: 15px; padding: 10px 12px; background: #e7f5ff; border: 1px solid #b3e5fc; color: #005a9e; border-radius: 8px; font-size: 13px; line-height: 1.5; }
     .note-warning { display: none; margin-top: 10px; padding: 10px 12px; background: #fff8e1; border: 1px solid #ffecb3; color: #8a6d3b; border-radius: 8px; font-size: 13px; line-height: 1.5; }
-  </style>
-</head>
+
+    /* ▼▼▼ 変更後のスタイル ▼▼▼ */
+    .json-gen-link-container {
+      text-align: right; /* 右寄せ */
+      margin-bottom: 10px; /* textareaとの間隔 */
+    }
+    .json-gen-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #f8f9fa; /* 背景色 */
+      color: var(--primary-color); /* テキスト色 */
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: 1px solid #ced4da; /* 枠線 */
+    }
+    .json-gen-link:hover {
+      background: #e9ecef; /* ホバー時の背景色 */
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px var(--focus-shadow);
+    }
+    .json-gen-link svg {
+      fill: var(--primary-color);
+      width: 16px;
+      height: 16px;
+    }
+    /* ▲▲▲ 変更後のスタイル ▲▲▲ */
+</style>
+  
+  <script>
+    var geminiUrl = "<?!= geminiUrl ?>";
+  </script>
+  </head>
 <body>
   <div class="container">
     <h1>スライド作成ツール</h1>
@@ -329,12 +364,19 @@
       <div class="editor-section">
         <h2>1. スライドデータを入力</h2>
         <div class="editor-content">
+
         <div id="jsonValidation" class="json-validation">
           <div class="validation-status" id="validationStatus">
             <span class="validation-icon">⏳</span>
             <span class="validation-text">JSON形式をチェック中...</span>
           </div>
           <div class="validation-details" id="validationDetails"></div>
+          </div>
+        <div class="json-gen-link-container" id="geminiLinkContainer" style="display: none;">
+          <a href="<?!= geminiUrl ?>" target="_blank" class="json-gen-link">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 19.88c.04.3-.06.62-.29.85-.23.23-.55.33-.85.29-.3-.04-.62.06-.85.29-.23.23-.33.55-.29.85-.04-.3.06-.62.29-.85.23-.23.55-.33.85-.29.3.04.62-.06.85-.29.23-.23.33.55.29-.85zM9 2.12c-.04-.3.06-.62.29-.85S9.84 1 10.14 1.04c.3.04.62-.06.85-.29.23-.23.33.55.29-.85.04.3-.06.62-.29.85s-.55.33-.85.29c-.3-.04-.62.06-.85.29-.23.23-.33.55-.29.85zM19.88 15c.3-.04.62.06.85.29.23.23.33.55.29.85-.04.3-.35.5-.65.5s-.61-.2-.65-.5c-.04-.3.06-.62.29-.85.23-.23.55-.33.85-.29zM4.12 15c.3.04.62-.06.85-.29.23-.23.33-.55.29-.85-.04-.3-.35-.5-.65-.5s-.61.2-.65.5c-.04.3.06-.62.29.85.23.23.55.33.85-.29zM12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+            <span>GeminiでJSONを生成</span>
+          </a>
         </div>
         <textarea id="slideDataInput" placeholder='[
   {
@@ -536,11 +578,10 @@
             <small>このツールはSlide Generator (Developed by まじん) を基に作成されています</small>
           </div>
         </div>
-      </div>
+        </div>
     </div>
   </div>
 
-  
   <script>
     // グローバルスコープでプリセットデータを保持する変数
     let userPresets = {};
@@ -936,148 +977,132 @@
       });
       
       statusIcon.textContent = '✅';
-      statusText.textContent = `JSON形式: 正常 (${slideCount}枚のスライド)`;
+      statusText.textContent = `JSON形式は有効です (${slideCount}スライド)`;
+      details.style.display = 'none';
       
       if (warnings.length > 0) {
-        details.className = 'validation-details validation-warning';
+        statusIcon.textContent = '⚠️';
+        statusText.textContent = `JSON形式は有効ですが、${warnings.length}件の警告があります`;
         details.innerHTML = warnings.join('<br>');
+        details.className = 'validation-details validation-warning';
         details.style.display = 'block';
-      } else {
-        details.style.display = 'none';
       }
       
-    } catch (error) {
+    } catch (e) {
       statusIcon.textContent = '❌';
-      statusText.textContent = 'JSON形式: エラー';
+      statusText.textContent = 'JSON形式エラー';
+      details.textContent = e.message;
       details.className = 'validation-details validation-error';
-      details.textContent = error.message;
       details.style.display = 'block';
     }
   }
-
+  
   function updateGradientPreview() {
-    const startColor = $('gradientStartText').value;
-    const endColor = $('gradientEndText').value;
-    const preview = $('gradientPreview');
-    
+    var start = $('gradientStartText').value;
+    var end = $('gradientEndText').value;
+    var preview = $('gradientPreview');
     if (preview) {
-      preview.style.background = `linear-gradient(135deg, ${startColor}, ${endColor})`;
+      preview.style.background = `linear-gradient(135deg, ${start}, ${end})`;
     }
   }
 
-  function openFolder() {
-    const folderUrl = $('driveFolderUrl').value.trim();
-    if (!folderUrl) {
-      showStatus('保存先フォルダURLを入力してください', 'error', 3000);
-      return;
-    }
+  function setupCollapsibles() {
+    document.querySelectorAll('.collapsible-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+        header.classList.toggle('active');
+        content.classList.toggle('active');
+        if (content.classList.contains('active')) {
+          content.style.display = 'block';
+        } else {
+          content.style.display = 'none';
+        }
+      });
+    });
+  }
+  
+  function setupColorSync(colorInput, textInput) {
+    colorInput.addEventListener('input', () => textInput.value = colorInput.value);
+    textInput.addEventListener('input', () => colorInput.value = textInput.value);
     
-    if (!folderUrl.includes('drive.google.com') && !folderUrl.includes('docs.google.com')) {
-      showStatus('正しいGoogleドライブフォルダURLを入力してください', 'error', 3000);
-      return;
-    }
-    
-    window.open(folderUrl, '_blank');
+    colorInput.addEventListener('change', updateGradientPreview);
+    textInput.addEventListener('change', updateGradientPreview);
+  }
+
+  function setupUrlOpeners() {
+    document.querySelectorAll('.url-input-wrapper button, .folder-url-row button').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = button.previousElementSibling;
+        const url = input.value.trim();
+        if (url) {
+          window.open(url, '_blank');
+        } else {
+          showStatus('URLが入力されていません', 'error', 2000);
+        }
+      });
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    loadSettingsToForm();
-
-    showStatus('プリセットを読み込み中...', 'loading');
-    google.script.run
-      .withSuccessHandler(function(presets) {
+    // Geminiリンクの表示制御
+      // <head>で定義したグローバル変数 geminiUrl をチェック
+      try {
+        if (typeof geminiUrl === 'string' && geminiUrl.trim() !== '') {
+          $('geminiLinkContainer').style.display = 'block'; // URLが設定されていれば表示
+        }
+      } catch (e) {
+        console.error("Gemini URLの処理中にエラー:", e);
+      }
+    // プリセット取得
+    google.script.run.withSuccessHandler(function(presets) {
         userPresets = presets || {};
         updatePresetSelect();
-        showStatus('', '', 0);
-        restoreSelectedPreset();
-      })
-      .withFailureHandler(function(error) {
-        showStatus(`❌ プリセットの読み込みに失敗: ${error.message}`, 'error');
-        userPresets = {};
-        updatePresetSelect();
-      })
-      .getPresetsFromSheet();
-
-    $('generateBtn').addEventListener('click', generate);
-
-    $('primaryColor').addEventListener('input', function() { $('primaryColorText').value = this.value; updateGradientPreview(); });
-    $('primaryColorText').addEventListener('input', function() { $('primaryColor').value = this.value; updateGradientPreview(); });
-    $('gradientStart').addEventListener('input', function() { $('gradientStartText').value = this.value; updateGradientPreview(); });
-    $('gradientStartText').addEventListener('input', function() { $('gradientStart').value = this.value; updateGradientPreview(); });
-    $('gradientEnd').addEventListener('input', function() { $('gradientEndText').value = this.value; updateGradientPreview(); });
-    $('gradientEndText').addEventListener('input', function() { $('gradientEnd').value = this.value; updateGradientPreview(); });
-
-    $('enableGradient').addEventListener('change', toggleGradientOptions);
-    toggleGradientOptions();
+        // プリセット読み込み後に、前回選択したプリセットを復元
+        // restoreSelectedPreset(); 
+        // -> 起動時設定(loadSettings)と競合するため、loadSettingsToFormを優先
+    }).getPresetsFromSheet();
     
+    // イベントリスナー設定
+    $('generateBtn').addEventListener('click', generate);
+    $('enableGradient').addEventListener('change', toggleGradientOptions);
     $('slideDataInput').addEventListener('input', validateJSON);
     
-    $('presetSelect').addEventListener('change', function() {
-      const deleteBtn = $('deletePreset');
-      const hasSelection = this.value !== '';
-      deleteBtn.disabled = !hasSelection;
-      
-      if (hasSelection) {
-        loadSelectedPreset();
-        saveSelectedPresetToServer(this.value);
-      }
-    });
-    
+    // プリセット関連
     $('savePreset').addEventListener('click', saveCurrentPreset);
+    $('presetSelect').addEventListener('change', loadSelectedPreset);
     $('deletePreset').addEventListener('click', deleteSelectedPreset);
     
-    $('openFolderBtn').addEventListener('click', openFolder);
-    
-    validateJSON();
+    // プリセット選択状態による削除ボタンの活性化
+    $('presetSelect').addEventListener('change', function() {
+      $('deletePreset').disabled = this.value === '';
+      if(this.value) {
+        // saveSelectedPresetToServer(this.value); // 変更のたびに保存
+      }
+    });
+
+    // カラーピッカーとテキスト入力の同期
+    setupColorSync($('primaryColor'), $('primaryColorText'));
+    setupColorSync($('gradientStart'), $('gradientStartText'));
+    setupColorSync($('gradientEnd'), $('gradientEndText'));
+
+    // グラデーションプレビューの初期更新
     updateGradientPreview();
 
-    document.querySelectorAll('.collapsible-header').forEach(function(header) {
-      header.addEventListener('click', function() {
-        var content = this.nextElementSibling;
-        if (content) {
-          content.classList.toggle('active');
-          this.classList.toggle('active');
-        }
-      });
-    });
+    // アコーディオンメニューの設定
+    setupCollapsibles();
 
-    function getPreviewUrl(inputValue) {
-      if (!inputValue) return null;
-      if (inputValue.startsWith('http') && !inputValue.includes('drive.google.com')) {
-        return inputValue;
-      }
-      var fileIdPattern = /^[a-zA-Z0-9_-]{25,}$/;
-      if (fileIdPattern.test(inputValue)) {
-        return 'https://drive.google.com/file/d/' + inputValue + '/view';
-      }
-      var match = inputValue.match(/([a-zA-Z0-9_-]{25,})/);
-      if (match && match[1]) {
-        return 'https://drive.google.com/file/d/' + match[1] + '/view';
-      }
-      return inputValue;
-    }
+    // URLを開くボタンの設定
+    setupUrlOpeners();
 
-    document.querySelectorAll('.url-input-wrapper button').forEach(function(button) {
-      if (button.id === 'openFolderBtn') return;
-      
-      button.addEventListener('click', function() {
-        var input = this.parentElement.querySelector('input[type="text"]');
-        if (input) {
-          var inputValue = input.value.trim();
-          if (inputValue) {
-            var previewUrl = getPreviewUrl(inputValue);
-            if (previewUrl) {
-              window.open(previewUrl, '_blank', 'noopener,noreferrer');
-            } else {
-              alert('プレビューできない形式です');
-            }
-          } else {
-            alert('URLまたはIDを入力してください');
-          }
-        }
-      });
-    });
+    // 初期設定の読み込み
+    loadSettingsToForm();
+    
+    // グラデーションオプションの初期表示
+    toggleGradientOptions();
+    
+    // JSONの初期バリデーション
+    validateJSON();
   });
-</script>
+  </script>
 </body>
 </html>
